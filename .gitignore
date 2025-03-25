@@ -1,4 +1,4 @@
-.zip
+*.zip
 .env/
-.pdf
-.class
+*.pdf
+*.class
