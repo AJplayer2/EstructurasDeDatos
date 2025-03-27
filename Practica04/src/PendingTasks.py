@@ -1,6 +1,5 @@
-from collections import deque
-import coreClasses.Task as task
-import coreClasses.Queue as Queue
+import src.coreClasses.Task as task
+import src.coreClasses.Queue as Queue
 
 #Clase para las tareas pendientes
 class PendingTasks:

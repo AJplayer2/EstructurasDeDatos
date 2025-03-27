@@ -1,5 +1,5 @@
-import coreClasses.Task as task
-import coreClasses.Stack as Stack
+import src.coreClasses.Task as task
+import src.coreClasses.Stack as Stack
 
 #Clase para las tareas completadas
 class CompletedTasks:

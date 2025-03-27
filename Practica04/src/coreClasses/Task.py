@@ -21,23 +21,24 @@ class Task:
         with open(self._id_file, "w") as f:
             json.dump(self._id_counter, f)
 
-    #Cada tarea tiene un ID distinto, sirve para facilitar la busqueda de tareas, el primer digito del ID representa su urgencia
-    def __init__(self, priority:int, title:str, description:str, status:str):
+    @classmethod
+    def taskCreate(self, priority:int, title:str, description:str, status:str):
         #la prioridad va de 3 a 1, urgente, media y baja respectivamente.
-        self.priority = priority
-        self.title = title
-        self.description = description
-        self.status = status
-        self.ID = str(priority)+str(self._id_counter)
-        Task._id_counter += 1
-        Task._save_last_id()
+        self._load_last_id()
+        newID = str(priority)+str(self._id_counter)
+        self._save_last_id()
+        return self(title, description, status, newID)
+        
 
     def __init__(self, title:str, description:str, status:str, ID:str):
         self.title = title
         self.description = description
         self.status = status
         self.ID = ID
-        self.priority = ID[0]
+        self.priority = int(ID[0])
+
+    #Cada tarea tiene un ID distinto, sirve para facilitar la busqueda de tareas, el primer digito del ID representa su urgencia
+
 
     def changeStatus(self, newStatus:str):
         self.status = newStatus
@@ -52,5 +53,5 @@ class Task:
         self.priority = newPriority 
         self.ID = str(newPriority)+str(self.ID[1:])
 
-    def __repr__(self):
+    def write(self):
         return f"{self.title}|{self.description}|{self.status}|{self.ID}"
