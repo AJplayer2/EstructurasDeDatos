@@ -1,4 +1,4 @@
-import Task as task
+from .Task import Task as task
 
 #Clase stack especial para las tareas.
 class Stack:

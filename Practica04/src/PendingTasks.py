@@ -1,11 +1,11 @@
 from collections import deque
-import src.coreClasses.Task as task
-import src.coreClasses.Queue as queue
+import coreClasses.Task as task
+import coreClasses.Queue as Queue
 
 #Clase para las tareas pendientes
 class PendingTasks:
     def __init__(self):
-        self.tasks = queue()
+        self.tasks = Queue.Queue()
 
     def addTask(self, item:task):
         self.tasks.enqueue(item)
@@ -16,14 +16,10 @@ class PendingTasks:
         return completedTask
 
     def removeTask(self, item:task):
-        self.removeTask(item)
+        self.tasks.removeTask(item)
 
-    #Usado para visualizar las tareas pendientes, ordena las tareas segun su prioridad de urgente a baja.
-    def taskList(self):
-        return sorted(self.tasks, key=lambda x: getattr(x,"priority"), reverse=True)
-    
     def editTask(self, item:task, attribute, newValue):
-        for t in self.tasks:
+        for t in self.tasks.items:
             if getattr(t, "ID") == getattr(item, "ID"):
                 match attribute:
                     case "title":
@@ -32,3 +28,6 @@ class PendingTasks:
                         t.editDescription(newValue)
                     case "priority":
                         t.editPriority(newValue)
+    #Usado para visualizar las tareas pendientes, ordena las tareas segun su prioridad de urgente a baja.
+    def taskList(self):
+        return sorted(self.tasks.items, key=lambda x: getattr(x,"priority"), reverse=True)

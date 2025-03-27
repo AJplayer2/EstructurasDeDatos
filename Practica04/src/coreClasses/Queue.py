@@ -1,5 +1,5 @@
 from collections import deque
-import Task as task
+from .Task import Task as task
 
 #Clase cola especial para las tareas, se usa deque para mejorar la eficiencia de tiempo en comparacion a listas
 class Queue:

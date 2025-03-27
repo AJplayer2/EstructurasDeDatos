@@ -1,10 +1,10 @@
-import src.coreClasses.Task as task
-import src.coreClasses.Stack as stack
+import coreClasses.Task as task
+import coreClasses.Stack as Stack
 
 #Clase para las tareas completadas
 class CompletedTasks:
     def __init__(self):
-        self.tasks = stack()
+        self.tasks = Stack.Stack()
     
     def addTask(self, item:task):
         self.tasks.append(item)
@@ -13,7 +13,7 @@ class CompletedTasks:
         return self.tasks
     
     def editTask(self, item:task, attribute, newValue):
-        for t in self.tasks:
+        for t in self.tasks.items:
             if getattr(t, "ID") == getattr(item, "ID"):
                 match attribute:
                     case "title":
@@ -24,4 +24,4 @@ class CompletedTasks:
                         t.editPriority(newValue)
 
     def taskList(self):
-        return list(self.tasks)
+        return list(self.tasks.items)

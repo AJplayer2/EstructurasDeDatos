@@ -1,5 +1,25 @@
+import os, json
 class Task:
-    id_counter = 1
+    #Contador para los ID distintos y el archivo para no perder el cambio en el contador
+    _id_file = "task_id.json"
+    _id_counter = 1
+
+    #Carga el archivo con el contador o lo crea de no existir
+    @classmethod
+    def _load_last_id(self):
+        """Load last used ID from file."""
+        if os.path.exists(self._id_file):
+            with open(self._id_file, "r") as f:
+                self._id_counter = json.load(f) + 1
+        else:
+            self._id_counter = 1
+
+    #Guarda el archivo con el contador
+    @classmethod
+    def _save_last_id(self):
+        """Save the current ID to file."""
+        with open(self._id_file, "w") as f:
+            json.dump(self._id_counter, f)
 
     #Cada tarea tiene un ID distinto, sirve para facilitar la busqueda de tareas, el primer digito del ID representa su urgencia
     def __init__(self, priority:int, title:str, description:str, status:str):
@@ -8,8 +28,16 @@ class Task:
         self.title = title
         self.description = description
         self.status = status
-        self.ID = str(priority)+str(self.id_counter)
-        Task.id_counter += 1
+        self.ID = str(priority)+str(self._id_counter)
+        Task._id_counter += 1
+        Task._save_last_id()
+
+    def __init__(self, title:str, description:str, status:str, ID:str):
+        self.title = title
+        self.description = description
+        self.status = status
+        self.ID = ID
+        self.priority = ID[0]
 
     def changeStatus(self, newStatus:str):
         self.status = newStatus
@@ -23,3 +51,6 @@ class Task:
     def editPriority(self, newPriority:int):
         self.priority = newPriority 
         self.ID = str(newPriority)+str(self.ID[1:])
+
+    def __repr__(self):
+        return f"{self.title}|{self.description}|{self.status}|{self.ID}"
