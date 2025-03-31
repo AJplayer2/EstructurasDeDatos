@@ -46,7 +46,7 @@ class Task:
     def editTitle(self, newTitle:str):
         self.title = newTitle
 
-    def editDescription(self, newDescription=str):
+    def editDescription(self, newDescription:str=""):
         self.description = newDescription
 
     def editPriority(self, newPriority:int):
