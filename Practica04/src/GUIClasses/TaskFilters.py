@@ -1,50 +1,87 @@
-from PySide6.QtCore import Signal
-from PySide6.QtWidgets import QButtonGroup, QWidget, QPushButton, QApplication, QHBoxLayout
+# -*- coding: utf-8 -*-
+"""
+Módulo que define el widget TaskFilters para filtrar tareas por prioridad.
+"""
 import sys
+from PySide6.QtCore import Signal, Slot, Qt
+from PySide6.QtWidgets import (QApplication, QWidget, QPushButton,
+                               QButtonGroup, QHBoxLayout)
 
 class TaskFilters(QWidget):
-    tskFilter = Signal(int)
+    """
+    Widget con botones exclusivos para filtrar tareas por prioridad
+    (Todas, Urgente, Media, Baja).
 
-    def __init__(self):
-        super().__init__()
+    Señales:
+        filterChanged(int): Emitida cuando se selecciona un filtro,
+                            enviando el ID de prioridad asociado
+                            (0: Todas, 3: Urgente, 2: Media, 1: Baja).
+    """
+    filterChanged = Signal(int) # Señal renombrada
 
-        ALL = QPushButton("Title")
-        ALL.setCheckable(True)
+    # IDs para los filtros
+    FILTER_ALL_ID = 0
+    FILTER_URGENT_ID = 3
+    FILTER_MEDIUM_ID = 2
+    FILTER_LOW_ID = 1
 
-        urgent = QPushButton("URGENT")
-        urgent.setCheckable(True)
+    def __init__(self, parent: QWidget | None = None):
+        """Inicializador del widget de filtros."""
+        super().__init__(parent)
+        self.setObjectName("taskFiltersWidget")
+        self._setup_ui()
 
-        medium = QPushButton("MEDIUM")
-        medium.setCheckable(True)
+    def _setup_ui(self) -> None:
+        """Configura los widgets y el layout."""
+        self.all_button = QPushButton("TODAS")
+        self.all_button.setObjectName("filterAllButton")
+        self.all_button.setCheckable(True)
+        self.all_button.setToolTip("Mostrar todas las tareas")
 
-        low = QPushButton("LOW")
-        low.setCheckable(True)
+        self.urgent_button = QPushButton("URGENTE")
+        self.urgent_button.setObjectName("filterUrgentButton")
+        self.urgent_button.setCheckable(True)
+        self.urgent_button.setToolTip("Mostrar solo tareas urgentes (Prioridad 3)")
 
-        buttonGroup = QButtonGroup(self)
-        buttonGroup.addButton(ALL, 0)
-        buttonGroup.addButton(urgent, 3)
-        buttonGroup.addButton(medium, 2)
-        buttonGroup.addButton(low, 1)
-        buttonGroup.setExclusive(True)
-        buttonGroup.idClicked.connect(self.filterEvent)
+        self.medium_button = QPushButton("MEDIA")
+        self.medium_button.setObjectName("filterMediumButton")
+        self.medium_button.setCheckable(True)
+        self.medium_button.setToolTip("Mostrar solo tareas de prioridad media (Prioridad 2)")
 
-        layout = QHBoxLayout()
-        layout.addWidget(ALL)
-        layout.addWidget(urgent)
-        layout.addWidget(medium)
-        layout.addWidget(low)
-        self.setLayout(layout)
-        
-    def filterEvent(self, id):
-        print (f"internal slot pressed: {id}")
+        self.low_button = QPushButton("BAJA")
+        self.low_button.setObjectName("filterLowButton")
+        self.low_button.setCheckable(True)
+        self.low_button.setToolTip("Mostrar solo tareas de prioridad baja (Prioridad 1)")
 
-        self.tskFilter.emit(id)
-        print (f"id emitted: {id}")
+        # Grupo para asegurar exclusividad
+        self.button_group = QButtonGroup(self)
+        self.button_group.addButton(self.all_button, self.FILTER_ALL_ID)
+        self.button_group.addButton(self.urgent_button, self.FILTER_URGENT_ID)
+        self.button_group.addButton(self.medium_button, self.FILTER_MEDIUM_ID)
+        self.button_group.addButton(self.low_button, self.FILTER_LOW_ID)
+        self.button_group.setExclusive(True)
 
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
+        # Conectar señal del grupo al slot interno (nombre corregido)
+        self.button_group.idClicked.connect(self._on_filter_button_clicked)
 
-    widget = TaskFilters()
-    widget.show()
+        # Layout
+        layout = QHBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(6)
+        layout.addWidget(self.all_button)
+        layout.addWidget(self.urgent_button)
+        layout.addWidget(self.medium_button)
+        layout.addWidget(self.low_button)
+        layout.addStretch()
 
-    sys.exit(app.exec())
+        # Establecer estado inicial (Todas seleccionado por defecto)
+        self.all_button.setChecked(True)
+        # Emitir señal inicial si es necesario
+        self.filterChanged.emit(self.FILTER_ALL_ID)
+
+    @Slot(int)
+    def _on_filter_button_clicked(self, filter_id: int) -> None:
+        """Slot interno que se activa cuando un botón de filtro es clickeado."""
+        print(f"TaskFilters: Filtro presionado ID: {filter_id}") # Debug
+        # Emitir la señal pública renombrada
+        self.filterChanged.emit(filter_id)

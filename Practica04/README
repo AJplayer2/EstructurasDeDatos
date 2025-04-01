@@ -1,0 +1,3 @@
+Para compilar el archivo desde la  terminal, siga los pasos:
+1. ejecute pip install -r requirements.txt
+2. ejectute python main.py
