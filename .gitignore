@@ -2,3 +2,6 @@
 .env/
 *.pdf
 *.class
+__pycache__/
+dist/
+*.spec
