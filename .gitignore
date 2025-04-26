@@ -4,5 +4,5 @@
 *.class
 __pycache__/
 dist/
-*.spec
-Examen02.rar
+*.sp
+*.rar
